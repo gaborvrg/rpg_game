@@ -8,6 +8,8 @@ class GameLogic():
         self.width = width
         self.height = height
         self.canvas = Canvas(self.root, width=self.width, height=self.height)
+        self.testBoxX = 0
+        self.testBoxY = 0
         # self.canvas.bind("<KeyPress>", on_key_press)
         # self.canvas.focus_set()
         self.canvas.pack()
@@ -38,7 +40,8 @@ class GameLogic():
                     self.canvas.create_image(row*self.width/10, cell*self.height/10, anchor=NW, image=self.floor_img)
                 else:
                     self.canvas.create_image(row*self.width/10, cell*self.height/10, anchor=NW, image=self.wall_img)
-
+        print(map,'\n')
+        return map
         # self.gif2 = PhotoImage(file = 'hero-down.gif')
         # self.canvas.create_image(self.testBoxX, self.testBoxY, image = self.gif2, anchor = NW)
 
