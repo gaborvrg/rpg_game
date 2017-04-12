@@ -67,8 +67,6 @@ class GameLogic():
             self.hero = self.canvas.create_image(self.testBoxX, self.testBoxY, image = self.hero_left, anchor = NW)
 
 
-
-
     def controll(self, e):
 
         if e.keycode == 8320768:
