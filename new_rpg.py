@@ -51,9 +51,7 @@ class GameLogic():
                 else:
                     self.canvas.create_image(row*self.width/10, cell*self.height/10, anchor=NW, image=self.wall_img)
 
-    def wall_check(self):
-        pass
-
+    
 
 
 
@@ -77,9 +75,20 @@ class GameLogic():
             self.hero = self.canvas.create_image(self.testBoxX, self.testBoxY, image = self.hero_left, anchor = NW)
 
 
+
+    def wall_check(self):
+
+        if self.map[self.hero_coordinates[1] - 1][self.hero_coordinates[0] - 1] == 1:
+            return True
+        else:
+            False
+
+
+
     def controll(self, e):
 
         if e.keycode == 8320768:
+
             if self.testBoxY > 0:
                 self.testBoxY = self.testBoxY - self.height/10
                 self.direction = 'up'
@@ -87,13 +96,18 @@ class GameLogic():
             else:
                 self.testBoxY = self.testBoxY
                 
+
+
         elif e.keycode == 8255233:
-            if self.testBoxY < self.height - self.height/10:
-                self.testBoxY = self.testBoxY + self.height/10
-                self.direction = 'down'
-                self.hero_coordinates[1] += 1
-            else:
-                self.testBoxY = self.testBoxY
+            if self.wall_check() == True:
+                if self.testBoxY < self.height - self.height/10:
+                    self.testBoxY = self.testBoxY + self.height/10
+                    self.direction = 'down'
+                    self.hero_coordinates[1] += 1
+                else:
+                    self.testBoxY = self.testBoxY
+
+
 
         elif e.keycode == 8189699:
             if self.testBoxX < self.width - self.width/10:
@@ -102,6 +116,8 @@ class GameLogic():
                 self.hero_coordinates[0] += 1
             else:
                 self.testBoxX = self.testBoxX
+
+
 
         elif e.keycode == 8124162:
             if self.testBoxX > 0:
