@@ -15,8 +15,10 @@ class GameLogic():
         self.floor_img = PhotoImage(file = "floor.gif")
         self.wall_img = PhotoImage(file = "wall.gif")
         self.hero = None
+        self.hero_coordinates = [1,1]
         self.testBoxX = 0 # initial coordinates
         self.testBoxY = 0
+
         self.map()
         self.canvas.bind("<KeyPress>", self.controll)
         self.canvas.pack()
@@ -48,6 +50,12 @@ class GameLogic():
                 else:
                     self.canvas.create_image(row*self.width/10, cell*self.height/10, anchor=NW, image=self.wall_img)
 
+        print(map[1][3])
+
+
+
+
+
     def hero_draw(self, turn):
 
         if turn == 'down':
@@ -73,6 +81,7 @@ class GameLogic():
             if self.testBoxY > 0:
                 self.testBoxY = self.testBoxY - self.height/10
                 self.direction = 'up'
+                self.hero_coordinates[1] -= 1
             else:
                 self.testBoxY = self.testBoxY
                 
@@ -80,6 +89,7 @@ class GameLogic():
             if self.testBoxY < self.height - self.height/10:
                 self.testBoxY = self.testBoxY + self.height/10
                 self.direction = 'down'
+                self.hero_coordinates[1] += 1
             else:
                 self.testBoxY = self.testBoxY
 
@@ -87,6 +97,7 @@ class GameLogic():
             if self.testBoxX < self.width - self.width/10:
                 self.testBoxX = self.testBoxX + self.width/10
                 self.direction = 'right'
+                self.hero_coordinates[0] += 1
             else:
                 self.testBoxX = self.testBoxX
 
@@ -94,9 +105,11 @@ class GameLogic():
             if self.testBoxX > 0:
                 self.testBoxX = self.testBoxX - self.width/10
                 self.direction = 'left'
+                self.hero_coordinates[0] -= 1
             else:
                 self.testBoxX = self.testBoxX
-        
+
+        print(self.hero_coordinates)
         self.hero_draw(self.direction) # draw the box again in the new position
 
 
