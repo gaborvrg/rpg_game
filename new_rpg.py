@@ -10,15 +10,18 @@ class GameLogic():
         self.hero_down = PhotoImage(file = "hero-down.gif")
         self.floor_img = PhotoImage(file = "floor.gif")
         self.wall_img = PhotoImage(file = "wall.gif")
-
+        self.hero = None
         self.testBoxX = 0 # initial coordinates
         self.testBoxY = 0
 
         self.map()
+        # self.canvas.delete("all")
         self.canvas.bind("<KeyPress>", self.controll)
         self.canvas.pack()
         self.canvas.focus_set()  # Select the canvas to be in focused so it actually recieves the key hittings
         self.draw()
+        # self.canvas.delete(self.draw)
+
         self.root.mainloop()
 
 
@@ -43,16 +46,18 @@ class GameLogic():
                     self.canvas.create_image(row*self.width/10, cell*self.height/10, anchor=NW, image=self.floor_img)
                 else:
                     self.canvas.create_image(row*self.width/10, cell*self.height/10, anchor=NW, image=self.wall_img)
-        # self.draw()
 
     def draw(self):
 
-        self.canvas.create_image(self.testBoxX, self.testBoxY, image = self.hero_down, anchor = NW)
-
+        # self.draw().delete("All")
+        self.canvas.delete(self.hero)
+        self.hero = self.canvas.create_image(self.testBoxX, self.testBoxY, image = self.hero_down, anchor = NW)
 
 
 
     def controll(self,e):
+
+        # self.canvas.delete()
 
         if e.keycode == 8320768:
             if self.testBoxY > 0:
@@ -77,7 +82,7 @@ class GameLogic():
                 self.testBoxX = self.testBoxX - self.width/10
             else:
                 self.testBoxX = self.testBoxX
-
+        
         self.draw() # draw the box again in the new position
 
 
