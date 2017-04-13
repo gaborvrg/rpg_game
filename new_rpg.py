@@ -2,7 +2,7 @@ from tkinter import *
 
 class GameLogic():
 
-    def __init__(self, width = 720, height = 720):
+    def __init__(self, width = 600, height = 600):
         self.root = Tk()
         self.width = width
         self.height = height
@@ -16,12 +16,12 @@ class GameLogic():
         self.wall_img = PhotoImage(file = "wall.gif")
         self.map = []
         self.hero = None
-        self.hero_coordinates = [1,1]
+        self.hero_coordinates = [0,0]
         self.testBoxX = 0 # initial coordinates
         self.testBoxY = 0
 
         self.area()
-        self.canvas.bind("<KeyPress>", self.controll)
+        self.canvas.bind("<KeyPress>", self.control)
         self.canvas.pack()
         self.canvas.focus_set()  # Select the canvas to be in focused so it actually recieves the key hittings
         self.hero_draw(self.direction)
@@ -53,9 +53,6 @@ class GameLogic():
 
     
 
-
-
-
     def hero_draw(self, turn):
 
         if turn == 'down':
@@ -76,30 +73,27 @@ class GameLogic():
 
 
 
-    def wall_check(self):
+    def wall_check(self, x, y):
 
-        if self.map[self.hero_coordinates[1] - 1][self.hero_coordinates[0] - 1] == 1:
+        # print(self.hero_coordinates, self.map[y][x])
+        if self.map[y][x] == 1:
             return True
         else:
-            False
+            return False
 
 
-
-    def controll(self, e):
-
+    def control(self, e):
         if e.keycode == 8320768:
-
-            if self.testBoxY > 0:
-                self.testBoxY = self.testBoxY - self.height/10
-                self.direction = 'up'
-                self.hero_coordinates[1] -= 1
-            else:
-                self.testBoxY = self.testBoxY
-                
-
+            if self.wall_check(self.hero_coordinates[0] ,self.hero_coordinates[1] - 1) == False:
+                if self.testBoxY > 0:
+                    self.testBoxY = self.testBoxY - self.height/10
+                    self.direction = 'up'
+                    self.hero_coordinates[1] -= 1
+                else:
+                    self.testBoxY = self.testBoxY
 
         elif e.keycode == 8255233:
-            if self.wall_check() == True:
+            if self.wall_check(self.hero_coordinates[0] ,self.hero_coordinates[1] + 1) == False:
                 if self.testBoxY < self.height - self.height/10:
                     self.testBoxY = self.testBoxY + self.height/10
                     self.direction = 'down'
@@ -107,30 +101,28 @@ class GameLogic():
                 else:
                     self.testBoxY = self.testBoxY
 
-
-
         elif e.keycode == 8189699:
-            if self.testBoxX < self.width - self.width/10:
-                self.testBoxX = self.testBoxX + self.width/10
-                self.direction = 'right'
-                self.hero_coordinates[0] += 1
-            else:
-                self.testBoxX = self.testBoxX
-
-
+            if self.wall_check(self.hero_coordinates[0] + 1 ,self.hero_coordinates[1] ) == False:
+                if self.testBoxX < self.width - self.width/10:
+                    self.testBoxX = self.testBoxX + self.width/10
+                    self.direction = 'right'
+                    self.hero_coordinates[0] += 1
+                else:
+                    self.testBoxX = self.testBoxX
 
         elif e.keycode == 8124162:
-            if self.testBoxX > 0:
-                self.testBoxX = self.testBoxX - self.width/10
-                self.direction = 'left'
-                self.hero_coordinates[0] -= 1
-            else:
-                self.testBoxX = self.testBoxX
+            if self.wall_check(self.hero_coordinates[0] - 1,self.hero_coordinates[1]) == False:
+                if self.testBoxX > 0:
+                    self.testBoxX = self.testBoxX - self.width/10
+                    self.direction = 'left'
+                    self.hero_coordinates[0] -= 1
+                else:
+                    self.testBoxX = self.testBoxX
 
-        print(self.hero_coordinates,self.map[self.hero_coordinates[1] - 1][self.hero_coordinates[0] - 1])
+        # print(self.hero_coordinates, self.map[self.hero_coordinates[1]][self.hero_coordinates[0]])
         self.hero_draw(self.direction) # draw the box again in the new position
 
-
+        # self.wall_check(self.hero_coordinates[0] ,self.hero_coordinates[1] - 1) == True:
 
 
 game = GameLogic()
