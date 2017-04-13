@@ -2,34 +2,65 @@ from tkinter import *
 
 class GameLogic():
 
-    def __init__(self, width = 600, height = 600):
+    def __init__(self, width = 600, height = 600, ):
         self.root = Tk()
         self.width = width
         self.height = height
         self.canvas = Canvas(self.root, width=self.width, height=self.height)
-        self.direction = 'down'
-        self.hero_down = PhotoImage(file = "hero-down.gif")
-        self.hero_up = PhotoImage(file = "hero-up.gif")
-        self.hero_left = PhotoImage(file = "hero-left.gif")
-        self.hero_right = PhotoImage(file = "hero-right.gif")
-        self.floor_img = PhotoImage(file = "floor.gif")
-        self.wall_img = PhotoImage(file = "wall.gif")
-        self.map = []
-        self.hero = None
-        self.hero_coordinates = [0,0]
-        self.testBoxX = 0 # initial coordinates
-        self.testBoxY = 0
-
-        self.area()
+        self.hero = Hero()
+        self.area = Area()
         self.canvas.bind("<KeyPress>", self.control)
         self.canvas.pack()
         self.canvas.focus_set()  # Select the canvas to be in focused so it actually recieves the key hittings
-        self.hero_draw(self.direction)
-
+        self.area.tiles_and_walls(self.canvas, self.width, self.height)
+        self.hero.hero_draw(self.canvas, 'down', self.hero.hero_coordinates[0] * self.width/10, self.hero.hero_coordinates[1] * self.height/10)
         self.root.mainloop()
 
 
-    def area(self):
+    def position_check(self, x, y):
+        if 0 <= x <= 9 and 0 <= y <= 9:
+            if self.area.map[y][x] == 0:
+                return True
+            else:
+                return False
+        else:
+            return False
+
+
+    def control(self, e):
+        if e.keycode == 8320768:
+            if self.position_check(self.hero.hero_coordinates[0] ,self.hero.hero_coordinates[1] - 1):
+                self.hero.hero_coordinates[1] -= 1
+                self.hero.hero_draw(self.canvas, 'up', self.hero.hero_coordinates[0] * self.width/10, self.hero.hero_coordinates[1] * self.height/10)
+
+
+        elif e.keycode == 8255233:
+            if self.position_check(self.hero.hero_coordinates[0] ,self.hero.hero_coordinates[1] + 1):
+                self.hero.hero_coordinates[1] += 1
+                self.hero.hero_draw(self.canvas, 'down', self.hero.hero_coordinates[0] * self.width/10, self.hero.hero_coordinates[1] * self.height/10)
+
+
+        elif e.keycode == 8189699:
+            if self.position_check(self.hero.hero_coordinates[0] + 1,self.hero.hero_coordinates[1]):
+                self.hero.hero_coordinates[0] += 1
+                self.hero.hero_draw(self.canvas, 'right', self.hero.hero_coordinates[0] * self.width/10, self.hero.hero_coordinates[1] * self.height/10)
+
+
+        elif e.keycode == 8124162:
+            if self.position_check(self.hero.hero_coordinates[0] - 1,self.hero.hero_coordinates[1]):
+                self.hero.hero_coordinates[0] -= 1
+                self.hero.hero_draw(self.canvas, 'left', self.hero.hero_coordinates[0] * self.width/10, self.hero.hero_coordinates[1] * self.height/10)
+
+
+class Area():
+    """docstring for ClassName"""
+    def __init__(self):
+        self.map = []
+        self.floor_img = PhotoImage(file = "floor.gif")
+        self.wall_img = PhotoImage(file = "wall.gif")
+
+
+    def tiles_and_walls(self, canvas, width, height):
 
         self.map = [
         [0,0,0,0,0,0,0,0,0,0],
@@ -47,78 +78,55 @@ class GameLogic():
         for row in range(len(self.map)):
             for cell in range(len(self.map[row])):
                 if self.map[cell][row] == 0:
-                    self.canvas.create_image(row*self.width/10, cell*self.height/10, anchor=NW, image=self.floor_img)
+                    canvas.create_image(row*width/10, cell*height/10, anchor=NW, image=self.floor_img)
                 else:
-                    self.canvas.create_image(row*self.width/10, cell*self.height/10, anchor=NW, image=self.wall_img)
+                    canvas.create_image(row*width/10, cell*height/10, anchor=NW, image=self.wall_img)
 
-    
 
-    def hero_draw(self, turn):
+class Hero():
+    """docstring for Hero"""
+    def __init__(self):
+        self.hero_down = PhotoImage(file = "hero-down.gif")
+        self.hero_up = PhotoImage(file = "hero-up.gif")
+        self.hero_left = PhotoImage(file = "hero-left.gif")
+        self.hero_right = PhotoImage(file = "hero-right.gif")
+        self.hero_coordinates = [0,0]
+        self.hero = None
+
+
+
+    def hero_draw(self, canvas, turn, x, y):
 
         if turn == 'down':
-            self.canvas.delete(self.hero)
-            self.hero = self.canvas.create_image(self.testBoxX, self.testBoxY, image = self.hero_down, anchor = NW)
+            canvas.delete(self.hero)
+            self.hero = canvas.create_image(x, y, image = self.hero_down, anchor = NW)
 
         elif turn == 'up':
-            self.canvas.delete(self.hero)
-            self.hero = self.canvas.create_image(self.testBoxX, self.testBoxY, image = self.hero_up, anchor = NW)
+            canvas.delete(self.hero)
+            self.hero = canvas.create_image(x, y, image = self.hero_up, anchor = NW)
 
         elif turn == 'right':
-            self.canvas.delete(self.hero)
-            self.hero = self.canvas.create_image(self.testBoxX, self.testBoxY, image = self.hero_right, anchor = NW)
+            canvas.delete(self.hero)
+            self.hero = canvas.create_image(x, y, image = self.hero_right, anchor = NW)
 
         elif turn == 'left':
-            self.canvas.delete(self.hero)
-            self.hero = self.canvas.create_image(self.testBoxX, self.testBoxY, image = self.hero_left, anchor = NW)
+            canvas.delete(self.hero)
+            self.hero = canvas.create_image(x, y, image = self.hero_left, anchor = NW)
+
+
+class Skeleton():
+    def __init__(self):
+        self.skeleton = PhotoImage(file = "skeleton.gif")
+
+
+class Boss():
+    def __init__(self):
+        self.boss = PhotoImage(file = "boss.gif")
 
 
 
-    def wall_check(self, x, y):
-        if self.map[y][x] == 1:
-            return True
-        else:
-            return False
 
 
-    def control(self, e):
-        if e.keycode == 8320768:
-            if self.testBoxY > 0:
-                if self.wall_check(self.hero_coordinates[0] ,self.hero_coordinates[1] - 1) == False:
-                    self.testBoxY = self.testBoxY - self.height/10
-                    self.direction = 'up'
-                    self.hero_coordinates[1] -= 1
-                else:
-                    self.testBoxY = self.testBoxY
-
-        elif e.keycode == 8255233:
-            if self.testBoxY < self.height - self.height/10:
-                if self.wall_check(self.hero_coordinates[0] ,self.hero_coordinates[1] + 1) == False:
-                    self.testBoxY = self.testBoxY + self.height/10
-                    self.direction = 'down'
-                    self.hero_coordinates[1] += 1
-                else:
-                    self.testBoxY = self.testBoxY
-
-        elif e.keycode == 8189699:
-            if self.testBoxX < self.width - self.width/10:
-                if self.wall_check(self.hero_coordinates[0] + 1 ,self.hero_coordinates[1] ) == False:
-                    self.testBoxX = self.testBoxX + self.width/10
-                    self.direction = 'right'
-                    self.hero_coordinates[0] += 1
-                else:
-                    self.testBoxX = self.testBoxX
-
-        elif e.keycode == 8124162:
-            if self.testBoxX > 0:
-                if self.wall_check(self.hero_coordinates[0] - 1,self.hero_coordinates[1]) == False:
-                    self.testBoxX = self.testBoxX - self.width/10
-                    self.direction = 'left'
-                    self.hero_coordinates[0] -= 1
-                else:
-                    self.testBoxX = self.testBoxX
-
-        # print(self.hero_coordinates, self.map[self.hero_coordinates[1]][self.hero_coordinates[0]])
-        self.hero_draw(self.direction) # draw the box again in the new position
 
 
 
