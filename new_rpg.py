@@ -117,10 +117,12 @@ class GameLogic():
                 else:
                     self.testBoxX = self.testBoxX
 
-        print(self.hero_coordinates, self.map[self.hero_coordinates[1]][self.hero_coordinates[0]])
+        # print(self.hero_coordinates, self.map[self.hero_coordinates[1]][self.hero_coordinates[0]])
         self.hero_draw(self.direction) # draw the box again in the new position
 
-        # self.wall_check(self.hero_coordinates[0] ,self.hero_coordinates[1] - 1) == True:
+
+
+
 
 
 game = GameLogic()
